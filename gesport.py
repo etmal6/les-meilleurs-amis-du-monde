@@ -193,4 +193,3 @@ class PortefeuilleGraphique(Portefeuille):
         plt.ylabel('Valeur')
         plt.title('Projections des titres')
         plt.show()
-    #fin
