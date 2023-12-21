@@ -1,5 +1,12 @@
 # bourse.py
 import numpy as np
+import matplotlib.pyplot as plt
+import json
+from exceptions import SoldeInsuffisant
+import argparse
+from portefeuille import Portefeuille
+from portefeuille_graphique import PortefeuilleGraphique
+
 
 class Bourse:
     @staticmethod
@@ -16,9 +23,6 @@ class SoldeInsuffisant(Exception):
     pass
 
 # portefeuille.py
-import json
-from exceptions import SoldeInsuffisant
-
 class Portefeuille:
     def __init__(self, nom_portefeuille="folio"):
         self.nom_portefeuille = nom_portefeuille
@@ -31,7 +35,7 @@ class Portefeuille:
 
     def acheter(self, date, titres, quantite):
         # Simplification : on suppose que les titres ont un prix unitaire fixe
-        prix_unitaire = 10  # Remplacez par le vrai mécanisme pour obtenir le prix du titre
+        prix_unitaire = 10
         cout_total = quantite * prix_unitaire
 
         if self.solde < cout_total:
@@ -46,7 +50,7 @@ class Portefeuille:
 
     def vendre(self, date, titres, quantite):
         # Simplification : on suppose que les titres ont un prix unitaire fixe
-        prix_unitaire = 10  # Remplacez par le vrai mécanisme pour obtenir le prix du titre
+        prix_unitaire = 10
 
         if titres not in self.actions or self.actions[titres] < quantite:
             raise ValueError("Vous ne possédez pas suffisamment d'actions pour effectuer la vente.")
@@ -63,7 +67,7 @@ class Portefeuille:
         for titre in titres:
             if titre in self.actions:
                 quantite = self.actions[titre]
-                prix_unitaire = 10  # Remplacez par le vrai mécanisme pour obtenir le prix du titre
+                prix_unitaire = 10
                 montant = quantite * prix_unitaire
                 print(f"{titre} = {quantite} x {prix_unitaire} = {montant:.2f}")
 
@@ -74,7 +78,7 @@ class Portefeuille:
         for titre in titres:
             if titre in self.actions:
                 quantite = self.actions[titre]
-                prix_unitaire = 10  # Remplacez par le vrai mécanisme pour obtenir le prix du titre
+                prix_unitaire = 10
                 valeur_actuelle = quantite * prix_unitaire
                 q1, q2, q3 = Bourse.calculer_projections(rendement, volatilite)
                 valeur_projete = valeur_actuelle * q2  # Utilisation de la médiane pour la projection
@@ -97,12 +101,9 @@ class Portefeuille:
                 self.solde = data["solde"]
                 self.actions = data["actions"]
         except FileNotFoundError:
-            pass  # Fichier non trouvé, le portefeuille est initialement vide
+            pass
 
 # portefeuille_graphique.py
-from portefeuille import Portefeuille
-import matplotlib.pyplot as plt
-
 class PortefeuilleGraphique(Portefeuille):
     def lister_graphique(self, date, titres=None):
         # Implémentation de l'affichage graphique de l'historique des valeurs
@@ -113,37 +114,26 @@ class PortefeuilleGraphique(Portefeuille):
         pass
 
 # gesport.py
-import argparse
-from portefeuille import Portefeuille
-from portefeuille_graphique import PortefeuilleGraphique
-
 def analyser_commande():
     parser = argparse.ArgumentParser(description="Gestionnaire de portefeuille d'actions")
     subparsers = parser.add_subparsers(dest="action", help="Actions disponibles")
 
-    # Parser pour la commande "déposer"
     parser_deposer = subparsers.add_parser("deposer", help="Déposer la quantité de dollars spécifiée")
     parser_deposer.add_argument("--date", "-d", help="Date spécifiée", required=True)
     parser_deposer.add_argument("--quantite", "-q", type=float, help="Quantité spécifiée", default=1)
 
-    # Parser pour la commande "acheter"
     parser_acheter = subparsers.add_parser("acheter", help="Acheter la quantité spécifiée des titres spécifiés")
     parser_acheter.add_argument("--date", "-d", help="Date spécifiée", required=True)
     parser_acheter.add_argument("--titres", "-t", nargs="+", help="Titres spécifiés", required=True)
     parser_acheter.add_argument("--quantite", "-q", type=float, help="Quantité spécifiée", default=1)
 
-    # Parser pour la commande "vendre"
     parser_vendre = subparsers.add_parser("vendre", help="Vendre la quantité spécifiée des titres spécifiés")
     parser_vendre.add_argument("--date", "-d", help="Date spécifiée", required=True)
-    parser_vendre.add_argument("--titres", "-t", nargs="+", help="Titres spécifiés", required
+    parser_vendre.add_argument("--titres", "-t", nargs="+", help="Titres spécifiés", required)
 
 
 
 # portefeuille_graphique.py
-from portefeuille import Portefeuille
-import matplotlib.pyplot as plt
-import numpy as np
-
 class PortefeuilleGraphique(Portefeuille):
     def lister_graphique(self, date, titres=None):
         if not titres:
@@ -168,8 +158,7 @@ class PortefeuilleGraphique(Portefeuille):
 
     def _generer_historique(self, titre, date):
         # Implémentation de la génération de l'historique
-        # Note : ceci est une simplification, remplacez-le par une logique basée sur les transactions réelles
-        prix_unitaire = 10  # Remplacez par le vrai mécanisme pour obtenir le prix du titre
+        prix_unitaire = 10
         historique = [(date, self.actions[titre] * prix_unitaire)]
         return historique
 
